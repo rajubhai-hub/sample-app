@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "New Deployment Triggered Successfully"
+    return "Deployment Triggered Successfully"
 
 @app.route('/health')
 def health():
