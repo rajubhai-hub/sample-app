@@ -9,14 +9,6 @@ pipeline {
 
     stages {
 
-        stage('Clone Code') {
-            steps {
-                git branch: 'main',
-                url: 'https://github.com/rajubhai-hub/sample-app.git',
-                credentialsId:'Git_hub'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $IMAGE_NAME .'
@@ -26,8 +18,7 @@ pipeline {
         stage('Stop Old Container') {
             steps {
                 sh '''
-                docker stop $CONTAINER_NAME || true
-                docker rm $CONTAINER_NAME || true
+                docker rm -f $CONTAINER_NAME || true
                 '''
             }
         }
@@ -53,34 +44,34 @@ pipeline {
     post {
 
         success {
-            emailext (
+            emailext(
                 subject: "SUCCESS: Jenkins Build ${BUILD_NUMBER}",
                 body: """
-                Build Success
+Build Success
 
-                Job Name: ${JOB_NAME}
-                Build Number: ${BUILD_NUMBER}
+Job Name: ${JOB_NAME}
+Build Number: ${BUILD_NUMBER}
 
-                Console Output:
-                ${BUILD_URL}console
-                """,
-                to: "yourmail@gmail.com"
+Console:
+${BUILD_URL}console
+""",
+                to: "bankarajesh2308@gmail.com"
             )
         }
 
         failure {
-            emailext (
+            emailext(
                 subject: "FAILED: Jenkins Build ${BUILD_NUMBER}",
                 body: """
-                Build Failed
+Build Failed
 
-                Job Name: ${JOB_NAME}
-                Build Number: ${BUILD_NUMBER}
+Job Name: ${JOB_NAME}
+Build Number: ${BUILD_NUMBER}
 
-                Check Logs:
-                ${BUILD_URL}console
-                """,
-                to: "yourmail@gmail.com"
+Logs:
+${BUILD_URL}console
+""",
+                to: "bankarajesh2308@gmail.com"
             )
         }
     }
