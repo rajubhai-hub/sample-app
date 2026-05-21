@@ -13,8 +13,10 @@ pipeline {
             steps {
                 git branch: 'main',
                 url: 'https://github.com/rajubhai-hub/sample-app.git'
+                credentialsId: 'Git_hub'
             }
         }
+
 
         stage('Build Docker Image') {
             steps {
