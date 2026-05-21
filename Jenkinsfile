@@ -12,7 +12,7 @@ pipeline {
         stage('Clone Code') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/USERNAME/REPO.git'
+                url: 'https://github.com/rajubhai-hub/sample-app.git'
             }
         }
 
@@ -22,7 +22,7 @@ pipeline {
             }
         }
 
-        stage('Remove Old Container') {
+        stage('Stop Old Container') {
             steps {
                 sh '''
                 docker stop $CONTAINER_NAME || true
@@ -31,7 +31,7 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Run Container') {
             steps {
                 sh '''
                 docker run -d \
@@ -42,7 +42,7 @@ pipeline {
             }
         }
 
-        stage('Check Container') {
+        stage('Docker Status') {
             steps {
                 sh 'docker ps -a'
             }
@@ -53,13 +53,14 @@ pipeline {
 
         success {
             emailext (
-                subject: "SUCCESS: Build ${BUILD_NUMBER}",
+                subject: "SUCCESS: Jenkins Build ${BUILD_NUMBER}",
                 body: """
                 Build Success
 
                 Job Name: ${JOB_NAME}
+                Build Number: ${BUILD_NUMBER}
 
-                Console Logs:
+                Console Output:
                 ${BUILD_URL}console
                 """,
                 to: "yourmail@gmail.com"
@@ -68,9 +69,12 @@ pipeline {
 
         failure {
             emailext (
-                subject: "FAILED: Build ${BUILD_NUMBER}",
+                subject: "FAILED: Jenkins Build ${BUILD_NUMBER}",
                 body: """
                 Build Failed
+
+                Job Name: ${JOB_NAME}
+                Build Number: ${BUILD_NUMBER}
 
                 Check Logs:
                 ${BUILD_URL}console
@@ -79,5 +83,4 @@ pipeline {
             )
         }
     }
-}ō
-
+}
